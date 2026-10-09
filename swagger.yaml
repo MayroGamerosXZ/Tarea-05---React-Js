@@ -1,0 +1,164 @@
+openapi: 3.0.0
+info:
+  title: Taller Mecánico API - Evreghen Command Center
+  description: Documentación de la API REST para el sistema de gestión del taller mecánico.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+    description: Servidor de Desarrollo
+paths:
+  /vehicles:
+    get:
+      summary: Obtener lista de vehículos
+      description: Retorna todos los vehículos activos en el taller.
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Filtro de búsqueda por placa, modelo o cliente.
+      responses:
+        '200':
+          description: Lista de vehículos obtenida con éxito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vehicle'
+    post:
+      summary: Registrar nuevo vehículo
+      description: Ingresa un nuevo vehículo al taller con estado 'planned'.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewVehicle'
+      responses:
+        '201':
+          description: Vehículo creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vehicle'
+
+  /vehicles/{id}/status:
+    patch:
+      summary: Actualizar estado operativo
+      description: Cambia el estado de una orden de trabajo (ej. planned -> development).
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID de la orden de trabajo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [planned, development, production]
+      responses:
+        '200':
+          description: Estado actualizado
+
+  /inventory:
+    get:
+      summary: Obtener inventario de repuestos
+      responses:
+        '200':
+          description: Lista de piezas y repuestos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InventoryItem'
+
+  /inventory/{id}/stock:
+    patch:
+      summary: Ajustar stock de inventario
+      description: Suma o resta unidades del stock actual.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID del artículo (SKU)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                delta:
+                  type: integer
+                  description: Cantidad a sumar (positiva) o restar (negativa)
+      responses:
+        '200':
+          description: Stock actualizado
+
+components:
+  schemas:
+    Vehicle:
+      type: object
+      properties:
+        id:
+          type: string
+          example: ORD-001
+        plate:
+          type: string
+          example: ABC-123
+        model:
+          type: string
+          example: Toyota Hilux 2021
+        owner:
+          type: string
+          example: Carlos Mendoza
+        status:
+          type: string
+          enum: [mock, planned, development, integrated, production]
+          example: development
+    NewVehicle:
+      type: object
+      required:
+        - plate
+        - model
+        - owner
+      properties:
+        plate:
+          type: string
+          example: XYZ-789
+        model:
+          type: string
+          example: Nissan Sentra 2020
+        owner:
+          type: string
+          example: María López
+    InventoryItem:
+      type: object
+      properties:
+        id:
+          type: string
+          example: INV-1
+        name:
+          type: string
+          example: Aceite Sintético 5W-30
+        stock:
+          type: integer
+          example: 24
+        minStock:
+          type: integer
+          example: 10
+        price:
+          type: number
+          format: float
+          example: 45.00
