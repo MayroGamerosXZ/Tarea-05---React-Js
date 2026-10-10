@@ -1,4 +1,4 @@
-# 🏎️ Command Center - Sistema de Taller Mecánico
+# Command Center - Sistema de Taller Mecánico
 
 <div align="center">
   <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
@@ -14,7 +14,7 @@ El **Sistema de Taller Mecánico "Command Center"** es una plataforma web (Singl
 
 ---
 
-## 🚀 Funcionalidad del Sistema
+## Funcionalidad del Sistema
 
 1. **Dashboard General:** Módulo de telemetría que calcula y grafica en tiempo real los vehículos en proceso, despachados y pendientes de cobro.
 2. **Gestión de Vehículos:** Permite dar de alta vehículos que ingresan al taller, registrar su propietario y actualizar su estatus operativo a lo largo del proceso.
@@ -24,7 +24,7 @@ El **Sistema de Taller Mecánico "Command Center"** es una plataforma web (Singl
 
 ---
 
-## ⚙️ Guía de Instalación y Ejecución
+## Guía de Instalación y Ejecución
 
 Para levantar este proyecto en tu entorno local, asegúrate de tener [Node.js](https://nodejs.org/) instalado y ejecuta los siguientes comandos en tu terminal:
 
@@ -46,7 +46,7 @@ npm run dev
 
 ---
 
-## 📝 Informe Académico (Aprendizajes de la Tarea)
+## Informe Académico (Aprendizajes de la Tarea)
 
 ### 1. ¿Qué aprendí o reforcé?
 Reforcé fuertemente el uso del estado global y el paso de propiedades (Props) en **React** utilizando Hooks (`useState`). Comprendí cómo hacer que múltiples componentes (como el catálogo del inventario, la ventana modal de cobro y la campana de notificaciones) se comuniquen de forma perfecta y sincrónica sin tener que recargar el navegador (SPA).
