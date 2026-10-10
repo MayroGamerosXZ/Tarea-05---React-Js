@@ -20,8 +20,25 @@
             <p class="text-gray-500">Demo del Proyecto: Taller Mecánico "Command Center"</p>
         </header>
 
-        <div class="mb-8 p-4 bg-orange-50 border-l-4 border-primary text-orange-900 text-sm">
+        <div class="mb-6 p-4 bg-orange-50 border-l-4 border-primary text-orange-900 text-sm">
             <strong>Instrucciones:</strong> Sigue este documento mientras grabas tu pantalla. Del lado izquierdo verás la <em>Acción</em> a realizar y del lado derecho lo que debes <em>Decir (Explicación)</em>.
+        </div>
+
+        <!-- COMANDOS DE EJECUCIÓN (APOYO) -->
+        <div class="mb-8 p-5 bg-gray-800 text-white rounded-md shadow-md border-l-4 border-l-green-400">
+            <h2 class="text-lg font-bold text-green-400 mb-2 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M4 17h16a2 2 0 002-2V5a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                Apoyo: Comandos de Ejecución
+            </h2>
+            <p class="text-sm text-gray-300 mb-3">Si durante el video necesitas explicar cómo iniciaste la aplicación desde la terminal, apóyate en estos comandos:</p>
+            <div class="bg-black p-3 rounded font-mono text-sm space-y-1">
+                <p><span class="text-gray-500"># 1. Instalar las dependencias del proyecto</span></p>
+                <p class="text-green-300">> npm install</p>
+                <br>
+                <p><span class="text-gray-500"># 2. Levantar el servidor local (Vite)</span></p>
+                <p class="text-green-300">> npm run dev</p>
+            </div>
+            <p class="text-xs text-gray-400 mt-3 italic">*Menciona que usaste Vite para compilar el proyecto porque ofrece tiempos de respuesta instantáneos en desarrollo.*</p>
         </div>
 
         <div class="space-y-6">
@@ -31,7 +48,7 @@
                     <span class="text-xs font-bold uppercase tracking-wider text-gray-500 block mb-2">Escena 1: Estructura del Proyecto</span>
                     <strong class="text-primary block mb-2">Acción en Pantalla:</strong>
                     <ul class="list-disc pl-5 text-sm space-y-1">
-                        <li>Muestra tu editor de código (VS Code).</li>
+                        <li>Muestra tu editor de código (VS Code) o la terminal ejecutando <code>npm run dev</code>.</li>
                         <li>Señala las carpetas clave: `public`, `src`, `node_modules`.</li>
                         <li>Señala archivos clave: `App.jsx` (Lógica), `package.json` y `vite.config.js`.</li>
                         <li>Muestra los archivos de testing que generaste: `GUIA_PRUEBAS.md`, `html-pruebas-uso.html`, `swagger.yaml`.</li>
@@ -41,7 +58,7 @@
                     <div>
                         <span class="text-xs font-bold uppercase tracking-wider text-gray-500 block mb-2">Lo que debes decir:</span>
                         <p class="text-gray-700 text-sm italic">
-                            "Hola, bienvenidos a la presentación de nuestro sistema 'Command Center'. Antes de ver la interfaz, quiero explicar brevemente la estructura del proyecto en React. Utilizamos <strong>Vite</strong> como empaquetador para mayor rapidez, lo cual vemos en nuestro `vite.config.js`. 
+                            "Hola, bienvenidos a la presentación de nuestro sistema 'Command Center'. Antes de ver la interfaz, quiero explicar brevemente la estructura del proyecto en React. Utilizamos <strong>Vite</strong> como empaquetador para mayor rapidez, lo cual vemos en nuestro `vite.config.js`. Levantamos el entorno con el comando <strong>npm run dev</strong>.
                             Dentro de nuestra carpeta <strong>`src`</strong> tenemos nuestro código fuente con <strong>`App.jsx`</strong>, donde reside la lógica.
                             Además, en la raíz hemos incluido archivos de soporte para QA, como guías de uso y Swagger para la API."
                         </p>
