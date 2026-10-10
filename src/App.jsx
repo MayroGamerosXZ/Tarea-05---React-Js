@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, Home, Wrench, Calendar, CarFront, FileText, Bell, Search, Menu, Plus, X, ArrowUpRight, ArrowDownRight, Package, Cpu } from 'lucide-react';
+import { Settings, Home, Wrench, Calendar, CarFront, FileText, Bell, Search, Menu, Plus, X, ArrowUpRight, ArrowDownRight, Package, Cpu, Receipt, CheckCircle } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -24,7 +24,7 @@ export default function App() {
 
   // Global State (Mock Database)
   const [vehicles, setVehicles] = useState([
-    { id: 'ORD-001', plate: 'ABC-123', model: 'Toyota Hilux 2021', owner: 'Carlos Mendoza', status: 'production' },
+    { id: 'ORD-001', plate: 'ABC-123', model: 'Toyota Hilux 2021', owner: 'Carlos Mendoza', status: 'development' },
     { id: 'ORD-002', plate: 'XYZ-987', model: 'Nissan Sentra 2018', owner: 'María López', status: 'development' },
     { id: 'ORD-003', plate: 'JKL-456', model: 'Honda Civic 2022', owner: 'Roberto Gómez', status: 'planned' },
   ]);
@@ -45,11 +45,11 @@ export default function App() {
         }`}
       >
         <div className="h-[64px] flex items-center justify-between px-4 border-b border-white/10">
-          <div className="flex items-center">
-            <Cpu className="text-primary mr-2" size={24} />
-            {isSidebarExpanded && <span className="text-on-shell font-bold text-lg tracking-tight">Command Center</span>}
+          <div className="flex items-center overflow-hidden">
+            <Cpu className="text-primary mr-2 min-w-[24px]" size={24} />
+            {isSidebarExpanded && <span className="text-on-shell font-bold text-lg tracking-tight whitespace-nowrap">Command Center</span>}
           </div>
-          <button onClick={() => setSidebarExpanded(!isSidebarExpanded)} className="text-white/70 hover:text-white ml-2">
+          <button onClick={() => setSidebarExpanded(!isSidebarExpanded)} className="text-white/70 hover:text-white ml-2 shrink-0">
             <Menu size={20} />
           </button>
         </div>
@@ -57,7 +57,7 @@ export default function App() {
         <nav className="flex-1 py-4 px-2 space-y-1">
           <NavItem icon={<Home />} label="Dashboard" active={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} expanded={isSidebarExpanded} />
           <NavItem icon={<CarFront />} label="Vehículos" active={activeTab === 'vehiculos'} onClick={() => setActiveTab('vehiculos')} expanded={isSidebarExpanded} />
-          <NavItem icon={<Calendar />} label="Órdenes" active={activeTab === 'ordenes'} onClick={() => setActiveTab('ordenes')} expanded={isSidebarExpanded} />
+          <NavItem icon={<Calendar />} label="Órdenes y Cobro" active={activeTab === 'ordenes'} onClick={() => setActiveTab('ordenes')} expanded={isSidebarExpanded} />
           <NavItem icon={<Wrench />} label="Inventario" active={activeTab === 'inventario'} onClick={() => setActiveTab('inventario')} expanded={isSidebarExpanded} />
         </nav>
       </aside>
@@ -102,8 +102,8 @@ export default function App() {
                       <div className="p-4 text-center text-sm text-on-surface-muted">No hay notificaciones.</div>
                     ) : (
                       notifications.map(notif => (
-                        <div key={notif.id} className={`p-3 text-sm border-b border-outline/50 flex items-start ${notif.type === 'warning' ? 'bg-red-50/50' : ''}`}>
-                          <div className={`w-2 h-2 mt-1.5 rounded-full mr-3 shrink-0 ${notif.type === 'warning' ? 'bg-red-500' : 'bg-primary'}`}></div>
+                        <div key={notif.id} className={`p-3 text-sm border-b border-outline/50 flex items-start ${notif.type === 'warning' ? 'bg-red-50/50' : notif.type === 'success' ? 'bg-green-50/50' : ''}`}>
+                          <div className={`w-2 h-2 mt-1.5 rounded-full mr-3 shrink-0 ${notif.type === 'warning' ? 'bg-red-500' : notif.type === 'success' ? 'bg-green-500' : 'bg-primary'}`}></div>
                           <p className="text-on-surface leading-tight">{notif.text}</p>
                         </div>
                       ))
@@ -144,8 +144,8 @@ function NavItem({ icon, label, active, onClick, expanded }) {
       }`}
       title={!expanded ? label : ''}
     >
-      <span className="mr-3">{icon}</span>
-      {expanded && <span>{label}</span>}
+      <span className="mr-3 shrink-0">{icon}</span>
+      {expanded && <span className="whitespace-nowrap">{label}</span>}
     </button>
   );
 }
@@ -153,7 +153,7 @@ function NavItem({ icon, label, active, onClick, expanded }) {
 function DashboardView({ vehicles }) {
   const inRepair = vehicles.filter(v => v.status === 'development').length;
   const ready = vehicles.filter(v => v.status === 'production').length;
-  const planned = vehicles.filter(v => v.status === 'planned').length;
+  const dispatched = vehicles.filter(v => v.status === 'dispatched').length;
 
   return (
     <div className="space-y-6">
@@ -166,8 +166,8 @@ function DashboardView({ vehicles }) {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <MetricCard title="Total Vehículos" value={vehicles.length} />
         <MetricCard title="En Reparación" value={inRepair} highlight={inRepair > 0} />
-        <MetricCard title="Listos (Entrega)" value={ready} />
-        <MetricCard title="Nuevas Citas" value={planned} />
+        <MetricCard title="Listos (Por Cobrar)" value={ready} />
+        <MetricCard title="Despachados" value={dispatched} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -188,7 +188,7 @@ function DashboardView({ vehicles }) {
           <div className="space-y-4">
             <ActivityItem text={`Último registro de vehículo: ${vehicles[vehicles.length - 1]?.model || 'N/A'}`} time="Reciente" />
             <ActivityItem text="Módulo de notificaciones en línea." time="Actualizado" />
-            <ActivityItem text="El sistema está operando al 100%." time="En vivo" />
+            <ActivityItem text="El sistema de cobro está operativo." time="En vivo" />
           </div>
         </div>
       </div>
@@ -210,7 +210,7 @@ function MetricCard({ title, value, highlight }) {
 function ActivityItem({ text, time, isAlert }) {
   return (
     <div className="flex items-start">
-      <div className={`w-2 h-2 mt-1.5 rounded-full mr-3 ${isAlert ? 'bg-red-500' : 'bg-primary'}`}></div>
+      <div className={`w-2 h-2 mt-1.5 rounded-full mr-3 shrink-0 ${isAlert ? 'bg-red-500' : 'bg-primary'}`}></div>
       <div>
         <p className="text-sm text-on-surface leading-tight mb-1">{text}</p>
         <span className="text-xs text-on-surface-muted font-medium">{time}</span>
@@ -315,26 +315,51 @@ function VehiclesView({ vehicles, setVehicles, searchQuery, addNotification }) {
 }
 
 function OrdersView({ vehicles, setVehicles, searchQuery, addNotification }) {
+  const [checkoutVehicle, setCheckoutVehicle] = useState(null);
+
   const filteredVehicles = vehicles.filter(v => v.id.toLowerCase().includes(searchQuery.toLowerCase()) || v.model.toLowerCase().includes(searchQuery.toLowerCase()));
 
   const changeStatus = (id, newStatus) => {
     setVehicles(vehicles.map(v => v.id === id ? { ...v, status: newStatus } : v));
     const vehicle = vehicles.find(v => v.id === id);
     if(vehicle) {
-      addNotification(`Orden ${id} (${vehicle.model}) cambió a estado: ${newStatus}`, 'info');
+      addNotification(`Orden ${id} cambió a estado: ${newStatus}`, 'info');
     }
+  };
+
+  const handleCheckoutClick = (vehicle) => {
+    // Primero cambiamos a status Listo/Producción si no lo estaba
+    if (vehicle.status !== 'production') {
+      changeStatus(vehicle.id, 'production');
+    }
+    // Abrimos ventana de cobro
+    setCheckoutVehicle({ ...vehicle, status: 'production' });
+  };
+
+  const confirmPayment = (id) => {
+    setVehicles(vehicles.map(v => v.id === id ? { ...v, status: 'dispatched' } : v));
+    addNotification(`¡Cobro realizado con éxito! Vehículo ${id} despachado.`, 'success');
+    setCheckoutVehicle(null);
   };
 
   return (
     <div className="space-y-6">
       <header className="mb-6">
-        <h1 className="text-3xl font-bold text-on-workspace mb-1 tracking-tight">Órdenes de Trabajo</h1>
-        <p className="text-on-surface-muted text-sm">Gestiona el progreso de las reparaciones.</p>
+        <h1 className="text-3xl font-bold text-on-workspace mb-1 tracking-tight">Órdenes de Trabajo y Cobro</h1>
+        <p className="text-on-surface-muted text-sm">Gestiona el progreso, liquidación y despacho.</p>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredVehicles.map(v => (
-          <div key={v.id} className="bg-surface border border-outline rounded-lg p-5 shadow-subtle flex flex-col">
+          <div key={v.id} className="bg-surface border border-outline rounded-lg p-5 shadow-subtle flex flex-col relative overflow-hidden">
+            {v.status === 'dispatched' && (
+              <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] flex items-center justify-center z-10">
+                <div className="bg-emerald-100 text-emerald-800 border border-emerald-200 px-3 py-1 rounded-full font-bold flex items-center shadow-sm">
+                  <CheckCircle size={16} className="mr-2" /> Vehículo Despachado
+                </div>
+              </div>
+            )}
+
             <div className="flex justify-between items-start mb-4">
               <div>
                 <span className="text-xs font-mono text-on-surface-muted">{v.id}</span>
@@ -343,18 +368,86 @@ function OrdersView({ vehicles, setVehicles, searchQuery, addNotification }) {
               <StatusBadge status={v.status} />
             </div>
             
-            <div className="mt-auto space-y-2 pt-4 border-t border-outline/50">
-              <p className="text-xs text-on-surface-muted mb-2">Cambiar Estado:</p>
+            <div className="mt-auto space-y-2 pt-4 border-t border-outline/50 relative z-0">
+              <p className="text-xs text-on-surface-muted mb-2">Progreso:</p>
               <div className="flex flex-wrap gap-2">
                 <button onClick={() => changeStatus(v.id, 'planned')} className={`text-xs px-2 py-1 rounded-sm border ${v.status === 'planned' ? 'bg-status-planned-bg border-status-planned-fg text-status-planned-fg font-bold' : 'border-outline hover:bg-white/50 text-on-surface'}`}>Planificado</button>
                 <button onClick={() => changeStatus(v.id, 'development')} className={`text-xs px-2 py-1 rounded-sm border ${v.status === 'development' ? 'bg-status-development-bg border-status-development-fg text-status-development-fg font-bold' : 'border-outline hover:bg-white/50 text-on-surface'}`}>En Reparación</button>
-                <button onClick={() => changeStatus(v.id, 'production')} className={`text-xs px-2 py-1 rounded-sm border ${v.status === 'production' ? 'bg-status-production-bg border-status-production-fg text-status-production-fg font-bold' : 'border-outline hover:bg-white/50 text-on-surface'}`}>Listo</button>
+                
+                <button 
+                  onClick={() => handleCheckoutClick(v)} 
+                  className={`text-xs px-2 py-1 rounded-sm border flex items-center ${v.status === 'production' ? 'bg-status-production-bg border-status-production-fg text-status-production-fg font-bold' : 'border-outline hover:bg-primary/10 text-on-surface hover:text-primary-strong hover:border-primary/50'}`}
+                >
+                  <Receipt size={12} className="mr-1" /> Listo / Cobrar
+                </button>
               </div>
             </div>
           </div>
         ))}
         {filteredVehicles.length === 0 && <p className="text-on-surface-muted">No se encontraron órdenes.</p>}
       </div>
+
+      {/* Checkout Modal */}
+      {checkoutVehicle && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-surface-elevated rounded-lg shadow-dialog w-[500px] overflow-hidden">
+            <div className="bg-surface p-5 border-b border-outline flex justify-between items-center">
+              <div>
+                <h2 className="text-xl font-bold text-on-surface flex items-center">
+                  <Receipt className="mr-2 text-primary" size={24} />
+                  Liquidación y Despacho
+                </h2>
+                <p className="text-xs text-on-surface-muted mt-1">{checkoutVehicle.id} - {checkoutVehicle.plate}</p>
+              </div>
+              <button onClick={() => setCheckoutVehicle(null)}><X size={20} className="text-on-surface-muted hover:text-on-surface" /></button>
+            </div>
+            
+            <div className="p-6 bg-white">
+              <div className="mb-6">
+                <h3 className="font-bold text-sm text-on-surface mb-3 uppercase tracking-wide">Detalle de Servicios</h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm border-b border-gray-100 pb-2">
+                    <span className="text-gray-600">Mano de Obra (Mecánica General)</span>
+                    <span className="font-mono text-gray-800">$120.00</span>
+                  </div>
+                  <div className="flex justify-between text-sm border-b border-gray-100 pb-2">
+                    <span className="text-gray-600">Diagnóstico por Escáner</span>
+                    <span className="font-mono text-gray-800">$45.00</span>
+                  </div>
+                  <div className="flex justify-between text-sm border-b border-gray-100 pb-2">
+                    <span className="text-gray-600">Repuestos Utilizados (Aceite, Filtros)</span>
+                    <span className="font-mono text-gray-800">$85.00</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-surface p-4 rounded-md space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-on-surface-muted font-bold">Subtotal</span>
+                  <span className="font-mono">$250.00</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-on-surface-muted font-bold">IVA (16%)</span>
+                  <span className="font-mono">$40.00</span>
+                </div>
+                <div className="flex justify-between text-lg border-t border-outline pt-2 mt-2">
+                  <span className="font-bold text-on-surface">TOTAL A COBRAR</span>
+                  <span className="font-mono font-bold text-primary-strong">$290.00</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-surface p-4 border-t border-outline flex justify-end space-x-3">
+              <button onClick={() => setCheckoutVehicle(null)} className="px-4 py-2 border border-outline rounded-sm text-sm font-medium hover:bg-gray-50 text-gray-600">
+                Cancelar
+              </button>
+              <button onClick={() => confirmPayment(checkoutVehicle.id)} className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-sm text-sm font-medium shadow-subtle flex items-center">
+                <CheckCircle size={16} className="mr-2" /> Confirmar Pago y Despachar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -499,6 +592,7 @@ function StatusBadge({ status }) {
     development: 'bg-status-development-bg text-status-development-fg border border-status-development-fg/20',
     integrated: 'bg-status-integrated-bg text-status-integrated-fg border border-status-integrated-fg/20',
     production: 'bg-status-production-bg text-status-production-fg border border-status-production-fg/20',
+    dispatched: 'bg-emerald-100 text-emerald-800 border border-emerald-200'
   };
   
   const labels = {
@@ -507,6 +601,7 @@ function StatusBadge({ status }) {
     development: 'En Reparación',
     integrated: 'Revisión QA',
     production: 'Listo (Entregable)',
+    dispatched: 'Despachado (Pagado)'
   };
 
   return (
