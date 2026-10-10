@@ -1,38 +1,58 @@
-# Sistema de Taller Mecánico - Evreghen Command Center
+# 🏎️ Command Center - Sistema de Taller Mecánico
 
-## 1. Funcionalidad del Sistema
-El **Sistema de Taller Mecánico** es una plataforma web (Single Page Application) desarrollada en React.js que permite gestionar las operaciones de un taller automotriz. Funciona como un centro de comando operativo donde los administradores y mecánicos pueden:
-- **Dashboard Principal:** Vista rápida de indicadores de rendimiento del taller, vehículos en reparación e ingresos estimados (utilizando gráficas o métricas cálidas).
-- **Gestión de Vehículos (Órdenes de Trabajo):** Registrar y monitorear los autos ingresados al taller, asignando estados basados en el diseño de sistema (Planificado, En Reparación, Terminado, etc.).
-- **Diseño de Centro de Comando (Command Center):** Incorporación de una interfaz especializada donde la pantalla emula el tablero técnico de una nave o centro de seguridad, adaptado a un taller de alto rendimiento.
+<div align="center">
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+  <img src="https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E" alt="Vite" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript" />
+  <img src="https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white" alt="NPM" />
+</div>
 
-## 2. Plan Creativo de Implementación
+<br>
 
-El sistema se desarrolló aplicando estrictamente el documento de diseño proporcionado ("Evreghen Command Center"):
-- **Arquitectura Visual Dividida:** 
-  - **Shell de la Aplicación:** Un menú lateral (Sidebar) y barra superior (Top bar) de color negro al 70% de opacidad con un desenfoque de 12px (glassmorphism/vidrio esmerilado) que "flotan" o enmarcan el área de trabajo.
-  - **Espacio de Trabajo (Workspace):** El lienzo central usa un color neutro/cálido (`#fcfaf7`) simulando un documento técnico brillante pero sin deslumbrar (evita el blanco puro).
-- **Acentos y Señales (Color Naranja):** Se emplea el naranja (`#fe6e00`) como el indicador principal de acción, interacciones hover y telemetría.
-- **Tipografía y Forma:** Se priorizó el uso de tipografías nativas `sans-serif` con un tracking específico para etiquetas pequeñas (estilo máquina/operacional), utilizando un redondeado de `8px` para dar solidez sin ser caricaturesco.
-- **Pila Tecnológica:** React.js + Vite + TailwindCSS + Lucide Icons.
+El **Sistema de Taller Mecánico "Command Center"** es una plataforma web (Single Page Application) desarrollada en React.js que permite gestionar las operaciones de un taller automotriz bajo una interfaz moderna, responsiva y altamente dinámica estilo *Centro de Operaciones de Seguridad*.
 
-### Fases de Implementación:
-1. **Configuración Inicial:** Scaffolding del proyecto con React (Vite) y configuración extendida de `tailwind.config.js` para incrustar los tokens de color del documento de diseño.
-2. **Desarrollo del Core Layout:** Creación del `AppShell` (Sidebar y Topbar) con los efectos de blur y bordes blancos sutiles (`bg-black/70 backdrop-blur-md`).
-3. **Módulos Operativos:** Construcción del Dashboard con *metric cards* de baja elevación y tablas de gestión de autos utilizando los *status badges* (colores definidos: amarillo, gris, azul, morado, verde).
-4. **Documentación:** Subida del código al repositorio de GitHub correspondiente, adjuntando el README completo.
+---
 
-## 3. Informe de Aprendizaje (Para Video/Informe)
+## 🚀 Funcionalidad del Sistema
 
-### ¿Qué se aprendió o reforzó?
-- Se reforzó el ciclo de vida y manejo del estado en componentes de **React Hooks** (`useState`, `useEffect`) para simular la carga de datos del taller.
-- Se aprendió a inicializar y estructurar una aplicación moderna con **Vite**, valorando su rapidez excepcional para levantar el entorno de desarrollo comparado con el tradicional `create-react-app`.
-- Se reforzó la habilidad de maquetación rápida y responsiva utilizando **Tailwind CSS**.
+1. **Dashboard General:** Módulo de telemetría que calcula y grafica en tiempo real los vehículos en proceso, despachados y pendientes de cobro.
+2. **Gestión de Vehículos:** Permite dar de alta vehículos que ingresan al taller, registrar su propietario y actualizar su estatus operativo a lo largo del proceso.
+3. **Inventario Inteligente:** Registro de refacciones con control matemático. Permite ingresos (Compras) y salidas (Mermas). Cuenta con **alertas en tiempo real** si el stock baja del límite de seguridad establecido.
+4. **Facturación y Despacho:** Un módulo dinámico avanzado donde se calcula el cobro final. Permite inyectar piezas desde el almacén, sumar mano de obra, calcular IVA y **descontar automáticamente las piezas físicas** del inventario al despachar la unidad.
+5. **Notificaciones Reactivas:** Campana de alertas global que captura todos los eventos importantes (vehículos creados, alertas de inventario y pagos recibidos).
 
-### ¿Qué fue lo más interesante?
-- Lo más interesante fue el **ejercicio de traducción de Diseño a Código**. Tomar un documento de especificación formal de UI (el `command-center-DESIGN.md`) que pedía emociones muy particulares ("no flat-white enterprise, no neon cyberpunk") y saber implementarlo usando variables y filtros CSS modernos, como el efecto frosted-glass.
-- Usar un esquema de interfaz "Security Operations Center" para un Taller Mecánico resultó ser un enfoque de diseño muy original y altamente técnico.
+---
 
-### ¿Qué no se sabía cómo funcionaba y ahora ya se tiene claro?
-- **Configuración avanzada y personalización de Tailwind CSS:** Antes no estaba seguro de cómo modificar toda la paleta base y definir tokens de diseño semánticos en `tailwind.config.js`. Ahora, el proceso de añadir temas (e.g., `colors: { workspace: '#fcfaf7', 'shell-base': 'rgba(0,0,0,0.70)' }`) y usarlos como `bg-workspace` o `text-primary-orange` me quedó totalmente claro.
-- **Efectos de vidrio esmerilado (Glassmorphism):** Desconocía cómo aplicar la mezcla correcta de opacidad, desenfoque de fondo y bordes translúcidos (`backdrop-blur`). Ahora sé cómo lograr ese "dark frosted application shell" perfectamente en la web.
+## ⚙️ Guía de Instalación y Ejecución
+
+Para levantar este proyecto en tu entorno local, asegúrate de tener [Node.js](https://nodejs.org/) instalado y ejecuta los siguientes comandos en tu terminal:
+
+```bash
+# 1. Clonar el repositorio
+git clone https://github.com/MayroGamerosXZ/Tarea-05---React-Js.git
+
+# 2. Entrar a la carpeta del proyecto
+cd Tarea-05---React-Js
+
+# 3. Instalar las dependencias
+npm install
+
+# 4. Iniciar el servidor local ultra-rápido (Vite)
+npm run dev
+```
+
+> **Nota:** La aplicación estará disponible de forma predeterminada en `http://localhost:5173`.
+
+---
+
+## 📝 Informe Académico (Aprendizajes de la Tarea)
+
+### 1. ¿Qué aprendí o reforcé?
+Reforcé fuertemente el uso del estado global y el paso de propiedades (Props) en **React** utilizando Hooks (`useState`). Comprendí cómo hacer que múltiples componentes (como el catálogo del inventario, la ventana modal de cobro y la campana de notificaciones) se comuniquen de forma perfecta y sincrónica sin tener que recargar el navegador (SPA).
+
+### 2. ¿Qué fue lo más interesante?
+El proceso de integrar un diseño de **UI riguroso** (utilizando el esquema "Command Center" con acentos naranjas y fondos *Frosted Glass*) con la **lógica matemática del negocio**. Lograr que la ventana de facturación leyera directamente el stock de los estantes, calculara totales dinámicos con el IVA incluido y mutara el arreglo de productos descontándolos al momento de pagar, fue un reto sumamente satisfactorio.
+
+### 3. ¿Qué no sabía y ahora tengo claro?
+Al iniciar el proyecto, no tenía del todo claro cómo construir un ecosistema complejo donde múltiples *inputs* controlados (valores fijos de mano de obra, diagnóstico por escáner, y listas desplegables de inventario) interactuaran al mismo tiempo para formar una "calculadora" dentro de una vista flotante. **Ahora domino la estructura de formularios dinámicos y la manipulación de arreglos en el estado de React.**
