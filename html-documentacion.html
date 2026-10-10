@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación Oficial - Command Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: { 
+                    colors: { 
+                        primary: '#fe6e00', 
+                        workspace: '#fcfaf7', 
+                        surface: '#f3f4f6',
+                        shell: '#111827'
+                    } 
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar for a polished look */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f3f4f6; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #fe6e00; }
+    </style>
+</head>
+<body class="bg-workspace text-gray-800 font-sans leading-relaxed">
+
+    <!-- Navbar -->
+    <nav class="bg-shell text-white sticky top-0 z-50 shadow-md border-b border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <svg class="text-primary w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
+                <span class="font-bold text-xl tracking-wide">Command Center Docs</span>
+            </div>
+            <div class="text-sm text-gray-400">Versión 1.0.0 | Manual Técnico</div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row gap-8">
+        
+        <!-- Sidebar / TOC -->
+        <aside class="w-full md:w-64 shrink-0">
+            <div class="sticky top-24 bg-white p-5 rounded-lg shadow-sm border border-gray-200">
+                <h3 class="font-bold text-gray-900 mb-4 uppercase text-xs tracking-wider">Tabla de Contenidos</h3>
+                <ul class="space-y-2 text-sm text-gray-600">
+                    <li><a href="#introduccion" class="hover:text-primary transition-colors">1. Introducción</a></li>
+                    <li><a href="#tecnologias" class="hover:text-primary transition-colors">2. Stack Tecnológico</a></li>
+                    <li><a href="#arquitectura" class="hover:text-primary transition-colors">3. Arquitectura y Estado</a></li>
+                    <li><a href="#modulos" class="hover:text-primary transition-colors">4. Módulos del Sistema</a>
+                        <ul class="pl-4 mt-1 space-y-1 text-gray-500 text-xs">
+                            <li><a href="#mod-dashboard" class="hover:text-primary">- Dashboard</a></li>
+                            <li><a href="#mod-vehiculos" class="hover:text-primary">- Gestión de Vehículos</a></li>
+                            <li><a href="#mod-cobro" class="hover:text-primary">- Liquidación y Cobro</a></li>
+                            <li><a href="#mod-inventario" class="hover:text-primary">- Control de Inventario</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#ejecucion" class="hover:text-primary transition-colors">5. Guía de Ejecución</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 space-y-12">
+            
+            <!-- Section 1: Intro -->
+            <section id="introduccion" class="bg-white p-8 rounded-lg shadow-sm border border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b pb-2">1. Introducción al Proyecto</h2>
+                <p class="mb-4">El sistema <strong>Command Center</strong> es una plataforma de gestión integral para talleres mecánicos de alto rendimiento. Su filosofía de diseño (UI/UX) se aleja del software corporativo tradicional para adoptar una estética de "Centro de Operaciones de Seguridad", utilizando fondos oscuros esmerilados (Frosted Glass), tipografías ágiles y acentos en naranja técnico para guiar la atención del operador.</p>
+                <p>El objetivo de la aplicación es digitalizar el flujo de trabajo: desde que un cliente deja su vehículo, pasando por la reparación y el consumo de refacciones, hasta la liquidación económica y el despacho final de la unidad.</p>
+            </section>
+
+            <!-- Section 2: Stack -->
+            <section id="tecnologias" class="bg-white p-8 rounded-lg shadow-sm border border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b pb-2">2. Stack Tecnológico</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="flex items-start space-x-3">
+                        <div class="bg-blue-100 p-2 rounded text-blue-600 font-bold">Re</div>
+                        <div>
+                            <h4 class="font-bold">React.js (v19)</h4>
+                            <p class="text-sm text-gray-600">Biblioteca principal para construir la interfaz de usuario mediante componentes controlados y gestión de estado (Hooks).</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <div class="bg-purple-100 p-2 rounded text-purple-600 font-bold">Vi</div>
+                        <div>
+                            <h4 class="font-bold">Vite</h4>
+                            <p class="text-sm text-gray-600">Herramienta de empaquetado ultra-rápida (Bundler) que reemplaza a Webpack, ofreciendo Hot Module Replacement (HMR) instantáneo.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <div class="bg-teal-100 p-2 rounded text-teal-600 font-bold">Tw</div>
+                        <div>
+                            <h4 class="font-bold">Tailwind CSS (v4)</h4>
+                            <p class="text-sm text-gray-600">Framework CSS de utilidades que permite estilizar componentes directamente en el marcado, soportando variables CSS modernas.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <div class="bg-orange-100 p-2 rounded text-orange-600 font-bold">Lu</div>
+                        <div>
+                            <h4 class="font-bold">Lucide React</h4>
+                            <p class="text-sm text-gray-600">Librería de iconografía vectorial limpia y consistente que se adapta a la paleta de colores de Tailwind.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: Arquitectura -->
+            <section id="arquitectura" class="bg-white p-8 rounded-lg shadow-sm border border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b pb-2">3. Arquitectura y Manejo del Estado</h2>
+                <p class="mb-4">La arquitectura de la aplicación es del tipo <strong>Single Page Application (SPA)</strong>. En lugar de recargar el navegador, un controlador maestro en <code>App.jsx</code> gestiona qué "Vista" se renderiza en el <em>Main Content Area</em>.</p>
+                <p class="mb-4">El estado se maneja a nivel global en el componente padre utilizando <code>useState</code>. Esto permite que si un repuesto se consume en el módulo de Órdenes, el módulo de Inventario y el de Notificaciones se enteren inmediatamente. La función clave para mantener esta sincronía es:</p>
+                
+                <div class="bg-gray-900 text-gray-300 p-4 rounded-md text-sm font-mono overflow-x-auto mb-4 shadow-inner">
+<pre><code>// Centralización de Lógica de Inventario
+const handleStockMovement = (id, delta, actionName) => {
+  setInventory(prev => prev.map(i => {
+    if (i.id === id) {
+      const newStock = Math.max(0, i.stock + delta);
+      // Disparador automático de alertas si cruza el umbral mínimo
+      if (newStock <= i.minStock && i.stock > i.minStock) {
+        addNotification(`¡Alerta! Producto bajo en stock: ${i.name}`, 'warning');
+      }
+      return { ...i, stock: newStock };
+    }
+    return i;
+  }));
+};</code></pre>
+                </div>
+            </section>
+
+            <!-- Section 4: Módulos -->
+            <section id="modulos" class="bg-white p-8 rounded-lg shadow-sm border border-gray-200 space-y-10">
+                <h2 class="text-2xl font-bold text-gray-900 border-b pb-2">4. Módulos del Sistema</h2>
+
+                <div id="mod-dashboard">
+                    <h3 class="text-lg font-bold text-primary mb-2 flex items-center"><span class="w-2 h-2 bg-primary rounded-full mr-2"></span>Dashboard General</h3>
+                    <p class="text-sm text-gray-700">Funge como el panel de telemetría principal. Calcula matemáticamente los arreglos de datos del sistema para arrojar en tiempo real la cantidad de unidades en el taller, vehículos reparándose y vehículos facturados. Incluye una gráfica de barras simulada y un historial de actividad del sistema.</p>
+                </div>
+
+                <div id="mod-vehiculos">
+                    <h3 class="text-lg font-bold text-primary mb-2 flex items-center"><span class="w-2 h-2 bg-primary rounded-full mr-2"></span>Gestión de Vehículos</h3>
+                    <p class="text-sm text-gray-700 mb-2">Responsable del alta (Registro) de las unidades que llegan al negocio.</p>
+                    <ul class="list-disc pl-5 text-sm text-gray-600">
+                        <li>Apertura de un Modal desenfocado (backdrop-blur).</li>
+                        <li>Captura de Placa, Modelo y Dueño.</li>
+                        <li>Asignación automática del estado inicial <em>Planificado</em> y generación de ID (Ej. ORD-004).</li>
+                    </ul>
+                </div>
+
+                <div id="mod-cobro">
+                    <h3 class="text-lg font-bold text-primary mb-2 flex items-center"><span class="w-2 h-2 bg-primary rounded-full mr-2"></span>Órdenes de Trabajo y Cobro Dinámico</h3>
+                    <p class="text-sm text-gray-700 mb-2">Es el núcleo comercial de la aplicación. Permite avanzar un vehículo por el pipeline productivo (Planificado &rarr; En Reparación &rarr; Listo).</p>
+                    <p class="text-sm text-gray-700 mb-2">Cuando un auto está <strong>Listo</strong>, se habilita la ventana de Liquidación. Esta ventana posee las siguientes características técnicas:</p>
+                    <ul class="list-disc pl-5 text-sm text-gray-600">
+                        <li><strong>Inyección de Dependencias:</strong> Lee el inventario global y renderiza solo piezas con stock > 0.</li>
+                        <li><strong>Cálculo Reactivo:</strong> Al agregar repuestos o editar mano de obra, recalcula el Subtotal, IVA (16%) y Total en tiempo real.</li>
+                        <li><strong>Mutación de Estado Dual:</strong> Al confirmar el pago, descuenta las piezas físicas del almacén y marca el vehículo permanentemente como "Despachado (Pagado)".</li>
+                    </ul>
+                </div>
+
+                <div id="mod-inventario">
+                    <h3 class="text-lg font-bold text-primary mb-2 flex items-center"><span class="w-2 h-2 bg-primary rounded-full mr-2"></span>Control de Inventario</h3>
+                    <p class="text-sm text-gray-700 mb-2">Administra el Catálogo de Repuestos. Soporta las siguientes operaciones:</p>
+                    <ul class="list-disc pl-5 text-sm text-gray-600">
+                        <li><strong>Alta de Refacciones:</strong> Modal para registrar nuevos SKU, definiendo precio y stock mínimo de seguridad.</li>
+                        <li><strong>Eventos de Entrada/Salida:</strong> Botones explícitos para sumar inventario (Compras) o restar (Mermas).</li>
+                        <li><strong>Alertas visuales:</strong> Si el stock baja del límite seguro (minStock), renderiza una pastilla roja en la tabla y notifica a la campana superior.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Section 5: Ejecución -->
+            <section id="ejecucion" class="bg-gray-50 p-8 rounded-lg shadow-sm border border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b pb-2">5. Guía de Ejecución Local</h2>
+                <p class="mb-4">Para levantar este proyecto en un entorno local (Windows/Mac/Linux), es necesario contar con <strong>Node.js</strong> instalado.</p>
+                <div class="bg-black p-5 rounded font-mono text-sm space-y-3 shadow-lg">
+                    <div>
+                        <p class="text-gray-500"># 1. Clona el repositorio oficial de GitHub</p>
+                        <p class="text-green-400">git clone https://github.com/MayroGamerosXZ/Tarea-05---React-Js.git</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500"># 2. Entra a la carpeta del proyecto</p>
+                        <p class="text-green-400">cd Tarea-05---React-Js</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500"># 3. Instala las dependencias (React, Vite, Tailwind, Lucide)</p>
+                        <p class="text-green-400">npm install</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500"># 4. Inicia el servidor ultra-rápido de desarrollo</p>
+                        <p class="text-green-400">npm run dev</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-sm text-gray-600">La consola imprimirá una dirección local (usualmente <code>http://localhost:5173</code>). Ábrela en Google Chrome o Edge para utilizar el sistema.</p>
+            </section>
+
+        </main>
+    </div>
+
+    <footer class="bg-shell text-center py-6 mt-12 border-t border-gray-800">
+        <p class="text-gray-400 text-sm">© 2026 Tarea 05 React.js - Desarrollado para Command Center UI/UX.</p>
+    </footer>
+
+</body>
+</html>
