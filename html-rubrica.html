@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rúbrica de Evaluación - Command Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: { colors: { primary: '#fe6e00', workspace: '#fcfaf7', surface: '#f3f4f6' } }
+            }
+        }
+    </script>
+</head>
+<body class="bg-workspace text-gray-800 font-sans p-8">
+    <div class="max-w-6xl mx-auto bg-white p-8 rounded-lg shadow-lg border border-gray-200">
+        <header class="mb-8 border-b pb-4 border-gray-200 flex justify-between items-end">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Rúbrica de Verificación y Evaluación</h1>
+                <p class="text-gray-500">Proyecto: Sistema de Taller Mecánico "Command Center" (React.js)</p>
+            </div>
+            <div class="bg-orange-100 text-orange-800 font-bold px-4 py-2 rounded-md border border-orange-200 text-sm">
+                Puntaje Total Máximo: 100 Puntos
+            </div>
+        </header>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[800px]">
+                <thead>
+                    <tr class="bg-gray-800 text-white">
+                        <th class="py-3 px-4 w-1/5 font-semibold text-sm rounded-tl-md">Criterio de Evaluación</th>
+                        <th class="py-3 px-4 w-1/5 font-semibold text-sm border-l border-gray-700 bg-green-700/20 text-green-400">Excelente (20 pts)</th>
+                        <th class="py-3 px-4 w-1/5 font-semibold text-sm border-l border-gray-700 bg-blue-700/20 text-blue-300">Bueno (15 pts)</th>
+                        <th class="py-3 px-4 w-1/5 font-semibold text-sm border-l border-gray-700 bg-yellow-700/20 text-yellow-300">Suficiente (10 pts)</th>
+                        <th class="py-3 px-4 w-1/5 font-semibold text-sm border-l border-gray-700 bg-red-700/20 text-red-400 rounded-tr-md">Debe Mejorar (0-5 pts)</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm">
+                    <!-- Fila 1 -->
+                    <tr class="border-b border-gray-200 hover:bg-gray-50">
+                        <td class="py-4 px-4 font-bold text-gray-800 bg-gray-50/50">1. Interfaz de Usuario (UI) y Diseño Command Center</td>
+                        <td class="py-4 px-4 border-l border-gray-200 text-gray-600">Implementa a la perfección Tailwind CSS, respetando la paleta estricta (naranja, gris oscuro), aplicando exitosamente el efecto "Frosted Glass" y garantizando accesibilidad y legibilidad.</td>
+                        <td class="py-4 px-4 border-l border-gray-200 text-gray-600">Usa Tailwind y el diseño base, pero falla en detalles menores (como el efecto de vidrio o contrastes de color levemente distintos).</td>
+                        <td class="py-4 px-4 border-l border-gray-200 text-gray-600">El diseño es funcional pero genérico. No respeta la identidad de marca ni las reglas estrictas de UI definidas en la documentación original.</td>
+                        <td class="py-4 px-4 border-l border-gray-200 text-gray-600">La interfaz está rota, desalineada o no se utiliza CSS de forma coherente.</td>
+                    </tr>
+                    <!-- Fila 2 -->
+                    <tr class="border-b border-gray-200 hover:bg-gray-50">
+                        <td class="py-4 px-4 font-bold text-gray-800 bg-gray-50/50">2. Arquitectura SPA y Estado Global (React Hooks)</td>
+                        <td class="py-4 px-4 border-l border-gray-200 text-gray-600">Excelente gestión del <code>useState</code>. La aplicación fluye sin recargas de página, el estado de los vehículos, inventario y buscador se elevan correctamente al componente principal.</td>
+                        <td class="py-4 px-4 border-l border-gray-200 text-gray-600">Maneja estados correctamente, pero con algunas redundancias de código o mala separación de la lógica, aunque la SPA funciona sin recargar.</td>
+                        <td class="py-4 px-4 border-l border-gray-200 text-gray-600">La aplicación recarga, hay fallas al cambiar de pestañas, o los datos introducidos desaparecen al navegar entre vistas.</td>
+                        <td class="py-4 px-4 border-l border-gray-200 text-gray-600">Errores graves de React en consola, o el proyecto no puede compilar bajo el servidor de Vite.</td>
+                    </tr>
+                    <!-- Fila 3 -->
+                    <tr class="border-b border-gray-200 hover:bg-gray-50">
+                        <td class="py-4 px-4 font-bold text-gray-800 bg-gray-50/50">3. Lógica de Negocio: Liquidación y Facturación Interactiva</td>
+                        <td class="py-4 px-4 border-l border-gray-200 text-gray-600">El modal de cobro permite entradas dinámicas, lee repuestos directamente del inventario, calcula subtotales/IVA exactos y descuenta las piezas reales de forma matemática y sincronizada.</td>
+                        <td class="py-4 px-4 border-l border-gray-200 text-gray-600">El modal calcula los totales, pero no descuenta las piezas del inventario real, o no permite ingresar partes dinámicas sino que están fijas.</td>
+                        <td class="py-4 px-4 border-l border-gray-200 text-gray-600">Solo se cambia el estado del vehículo a "Listo" sin ofrecer una calculadora matemática interactiva o desglose de facturación.</td>
+                        <td class="py-4 px-4 border-l border-gray-200 text-gray-600">El botón de cobrar no hace nada o el estado de los vehículos no se puede mutar (cambiar).</td>
+                    </tr>
+                    <!-- Fila 4 -->
+                    <tr class="border-b border-gray-200 hover:bg-gray-50">
+                        <td class="py-4 px-4 font-bold text-gray-800 bg-gray-50/50">4. Módulos Auxiliares: Inventario y Notificaciones</td>
+                        <td class="py-4 px-4 border-l border-gray-200 text-gray-600">El inventario admite Altas, Compras y Mermas (Salidas). El sistema de notificaciones atrapa eventos de toda la aplicación y genera alertas rojas si el stock cae del umbral seguro (minStock).</td>
+                        <td class="py-4 px-4 border-l border-gray-200 text-gray-600">El inventario funcional (CRUD) está bien, pero las alertas o notificaciones no reaccionan en tiempo real al cruzar los umbrales de seguridad.</td>
+                        <td class="py-4 px-4 border-l border-gray-200 text-gray-600">Solo existe una tabla visual de inventario que no se puede alterar (solo lectura), o no existe un centro de notificaciones.</td>
+                        <td class="py-4 px-4 border-l border-gray-200 text-gray-600">Los módulos de Inventario y Notificaciones no fueron construidos.</td>
+                    </tr>
+                    <!-- Fila 5 -->
+                    <tr class="border-b border-gray-200 hover:bg-gray-50">
+                        <td class="py-4 px-4 font-bold text-gray-800 bg-gray-50/50">5. Documentación Completa y Herramientas QA</td>
+                        <td class="py-4 px-4 border-l border-gray-200 text-gray-600">Entrega impecable: Incluye Swagger (OpenAPI), Checklist QA (HTML), Guión de Video, Manual Técnico de Documentación Oficial, y comandos de Git aplicados correctamente.</td>
+                        <td class="py-4 px-4 border-l border-gray-200 text-gray-600">Entrega documentación, pero le faltan los elementos de diseño o el código Swagger no cubre todas las rutas, o no incluye guiones de prueba QA interactivos.</td>
+                        <td class="py-4 px-4 border-l border-gray-200 text-gray-600">Solo entrega un README genérico o un reporte en PDF. No existen herramientas interactivas de prueba para el código frontend.</td>
+                        <td class="py-4 px-4 border-l border-gray-200 text-gray-600">Nula documentación. El proyecto carece de archivos Markdown o HTML descriptivos.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-8 bg-gray-100 p-5 rounded-md border border-gray-200 flex items-center justify-between">
+            <div>
+                <h4 class="font-bold text-gray-800">Uso de la Rúbrica:</h4>
+                <p class="text-sm text-gray-600 mt-1">Imprime o utiliza este documento para asignar la calificación final durante la defensa o exposición en video del proyecto.</p>
+            </div>
+            <button onclick="window.print()" class="bg-gray-800 hover:bg-black text-white px-5 py-2 rounded font-medium flex items-center transition-colors">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                Imprimir / PDF
+            </button>
+        </div>
+    </div>
+</body>
+</html>
