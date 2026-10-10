@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guion de Video - Command Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: { colors: { primary: '#fe6e00', workspace: '#fcfaf7', surface: '#f3f4f6' } }
+            }
+        }
+    </script>
+</head>
+<body class="bg-workspace text-gray-800 font-sans p-8">
+    <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg border border-gray-200">
+        <header class="mb-8 border-b pb-4 border-gray-200 text-center">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">🎬 Guion de Grabación de Video</h1>
+            <p class="text-gray-500">Demo del Proyecto: Taller Mecánico "Command Center"</p>
+        </header>
+
+        <div class="mb-8 p-4 bg-orange-50 border-l-4 border-primary text-orange-900 text-sm">
+            <strong>Instrucciones para la grabación:</strong> Sigue este documento mientras grabas tu pantalla. Del lado izquierdo verás la <em>Acción</em> a realizar en el sistema y del lado derecho lo que debes <em>Decir (Explicación)</em>.
+        </div>
+
+        <div class="space-y-6">
+            <!-- Escena 1 -->
+            <div class="flex flex-col md:flex-row border border-gray-200 rounded-md overflow-hidden">
+                <div class="bg-gray-100 w-full md:w-1/2 p-5 border-b md:border-b-0 md:border-r border-gray-200">
+                    <span class="text-xs font-bold uppercase tracking-wider text-gray-500 block mb-2">Escena 1: Introducción</span>
+                    <strong class="text-primary block mb-2">Acción en Pantalla:</strong>
+                    <ul class="list-disc pl-5 text-sm space-y-1">
+                        <li>Abre la aplicación en `localhost:5173`.</li>
+                        <li>Señala el nuevo logo (Microchip/Llave) en la barra lateral donde ahora dice <strong>Command Center</strong>.</li>
+                        <li>Haz clic en el ícono de la campana (arriba a la derecha) para mostrar las notificaciones iniciales.</li>
+                    </ul>
+                </div>
+                <div class="w-full md:w-1/2 p-5 bg-white">
+                    <span class="text-xs font-bold uppercase tracking-wider text-gray-500 block mb-2">Lo que debes decir:</span>
+                    <p class="text-gray-700 text-sm italic">
+                        "Hola, bienvenidos a la demostración de nuestro sistema de taller mecánico. En base al diseño propuesto, hemos bautizado y actualizado la plataforma como <strong>Command Center</strong>, integrando su logo respectivo en la barra lateral superior. 
+                        Además, en la parte superior derecha hemos incorporado un sistema de <strong>Notificaciones en tiempo real</strong>. Si hacemos clic en la campana, podemos ver los eventos del sistema."
+                    </p>
+                </div>
+            </div>
+
+            <!-- Escena 2 -->
+            <div class="flex flex-col md:flex-row border border-gray-200 rounded-md overflow-hidden">
+                <div class="bg-gray-100 w-full md:w-1/2 p-5 border-b md:border-b-0 md:border-r border-gray-200">
+                    <span class="text-xs font-bold uppercase tracking-wider text-gray-500 block mb-2">Escena 2: Vehículos y Notificaciones</span>
+                    <strong class="text-primary block mb-2">Acción en Pantalla:</strong>
+                    <ul class="list-disc pl-5 text-sm space-y-1">
+                        <li>Ve a la pestaña <strong>Vehículos</strong>.</li>
+                        <li>Haz clic en "Registrar Ingreso".</li>
+                        <li>Llena los datos (Placa, Modelo, Cliente) y da clic en Guardar.</li>
+                        <li>Inmediatamente haz clic en la <strong>Campana de Notificación</strong> y muestra el aviso de "Vehículo creado".</li>
+                    </ul>
+                </div>
+                <div class="w-full md:w-1/2 p-5 bg-white">
+                    <span class="text-xs font-bold uppercase tracking-wider text-gray-500 block mb-2">Lo que debes decir:</span>
+                    <p class="text-gray-700 text-sm italic">
+                        "Para demostrar la integración de los módulos, vamos a registrar el ingreso de un nuevo vehículo. Al guardar, observemos que no sólo se agrega a nuestra base de datos, sino que el sistema nos lanza una alerta en la campana de notificaciones avisando que el registro fue exitoso."
+                    </p>
+                </div>
+            </div>
+
+            <!-- Escena 3 -->
+            <div class="flex flex-col md:flex-row border border-gray-200 rounded-md overflow-hidden">
+                <div class="bg-gray-100 w-full md:w-1/2 p-5 border-b md:border-b-0 md:border-r border-gray-200">
+                    <span class="text-xs font-bold uppercase tracking-wider text-gray-500 block mb-2">Escena 3: Control de Inventario (CRUD Completo)</span>
+                    <strong class="text-primary block mb-2">Acción en Pantalla:</strong>
+                    <ul class="list-disc pl-5 text-sm space-y-1">
+                        <li>Navega al módulo <strong>Inventario</strong>.</li>
+                        <li>Haz clic en <strong>Agregar Producto</strong> (botón nuevo). Ingresa los datos y guarda.</li>
+                        <li>En un producto existente, presiona el botón de <strong>Compra (Flecha Arriba)</strong> para aumentar stock.</li>
+                        <li>Luego presiona <strong>Salida (Flecha Abajo)</strong> varias veces hasta pasar el mínimo.</li>
+                        <li>Muestra que se activa la etiqueta "BAJO STOCK" y revisa las notificaciones.</li>
+                    </ul>
+                </div>
+                <div class="w-full md:w-1/2 p-5 bg-white">
+                    <span class="text-xs font-bold uppercase tracking-wider text-gray-500 block mb-2">Lo que debes decir:</span>
+                    <p class="text-gray-700 text-sm italic">
+                        "Ahora pasemos al inventario. Hemos mejorado significativamente este módulo. Primero, ahora podemos agregar nuevos elementos al almacén. Segundo, el ajuste de stock ya no es solo subir o bajar números: manejamos eventos de <strong>Compra</strong> (para ingreso de mercancía) y <strong>Salida por Merma o Uso</strong>. 
+                        Si resto stock al grado de llegar al mínimo permitido, el sistema detecta la anomalía y me dispara una alerta roja en las notificaciones indicando 'Producto bajo en stock'."
+                    </p>
+                </div>
+            </div>
+
+            <!-- Escena 4 -->
+            <div class="flex flex-col md:flex-row border border-gray-200 rounded-md overflow-hidden">
+                <div class="bg-gray-100 w-full md:w-1/2 p-5 border-b md:border-b-0 md:border-r border-gray-200">
+                    <span class="text-xs font-bold uppercase tracking-wider text-gray-500 block mb-2">Escena 4: Conclusión (Lo aprendido)</span>
+                    <strong class="text-primary block mb-2">Acción en Pantalla:</strong>
+                    <ul class="list-disc pl-5 text-sm space-y-1">
+                        <li>Vuelve al <strong>Dashboard</strong> inicial.</li>
+                        <li>Muestra cómo las métricas principales se actualizaron en base a todo lo que hiciste (Total vehículos, etc).</li>
+                    </ul>
+                </div>
+                <div class="w-full md:w-1/2 p-5 bg-white">
+                    <span class="text-xs font-bold uppercase tracking-wider text-gray-500 block mb-2">Lo que debes decir:</span>
+                    <p class="text-gray-700 text-sm italic">
+                        "Para finalizar, todo repercute en nuestro Dashboard central. Con este proyecto aprendí cómo manejar <strong>Estados Globales en React</strong> para que un cambio en inventario se comunique con notificaciones. Lo más interesante fue darle esa lógica semántica de Compras/Mermas, y me quedó sumamente claro cómo el diseño UI afecta la experiencia del usuario (como al usar el diseño de Command Center y sus colores de advertencia). ¡Gracias!"
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</body>
+</html>
