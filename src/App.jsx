@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, Home, Wrench, Calendar, CarFront, FileText, Bell, Search, Menu, Plus, X, ArrowUpRight, ArrowDownRight, Package, Cpu, Receipt, CheckCircle } from 'lucide-react';
+import { Settings, Home, Wrench, Calendar, CarFront, FileText, Bell, Search, Menu, Plus, X, ArrowUpRight, ArrowDownRight, Package, Cpu, Receipt, CheckCircle, Trash2 } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -34,6 +34,24 @@ export default function App() {
     { id: 'INV-2', name: 'Bujías NGK Iridium', stock: 25, minStock: 20, price: 12.50 },
     { id: 'INV-3', name: 'Filtro de Aire', stock: 15, minStock: 10, price: 18.00 },
   ]);
+
+  // Global Inventory Handler (Used by both Inventory and Checkout)
+  const handleStockMovement = (id, delta, actionName, skipNotification = false) => {
+    setInventory(prev => prev.map(i => {
+      if (i.id === id) {
+        const newStock = Math.max(0, i.stock + delta);
+        if (!skipNotification) {
+          if (newStock <= i.minStock && i.stock > i.minStock) {
+            addNotification(`¡Alerta! Producto bajo en stock: ${i.name} (Quedan ${newStock})`, 'warning');
+          } else {
+            addNotification(`Movimiento de inventario (${actionName}): ${i.name}. Nuevo stock: ${newStock}`, 'info');
+          }
+        }
+        return { ...i, stock: newStock };
+      }
+      return i;
+    }));
+  };
 
   return (
     <div className="min-h-screen bg-workspace text-on-workspace flex overflow-hidden font-sans">
@@ -121,11 +139,11 @@ export default function App() {
 
         {/* Workspace Document */}
         <main className="flex-1 overflow-auto p-8 relative">
-          <div className="max-w-[1400px] mx-auto">
+          <div className="max-w-[1400px] mx-auto pb-20">
             {activeTab === 'dashboard' && <DashboardView vehicles={vehicles} />}
             {activeTab === 'vehiculos' && <VehiclesView vehicles={vehicles} setVehicles={setVehicles} searchQuery={searchQuery} addNotification={addNotification} />}
-            {activeTab === 'ordenes' && <OrdersView vehicles={vehicles} setVehicles={setVehicles} searchQuery={searchQuery} addNotification={addNotification} />}
-            {activeTab === 'inventario' && <InventoryView inventory={inventory} setInventory={setInventory} searchQuery={searchQuery} addNotification={addNotification} />}
+            {activeTab === 'ordenes' && <OrdersView vehicles={vehicles} setVehicles={setVehicles} inventory={inventory} handleStockMovement={handleStockMovement} searchQuery={searchQuery} addNotification={addNotification} />}
+            {activeTab === 'inventario' && <InventoryView inventory={inventory} setInventory={setInventory} handleStockMovement={handleStockMovement} searchQuery={searchQuery} addNotification={addNotification} />}
           </div>
         </main>
       </div>
@@ -188,7 +206,7 @@ function DashboardView({ vehicles }) {
           <div className="space-y-4">
             <ActivityItem text={`Último registro de vehículo: ${vehicles[vehicles.length - 1]?.model || 'N/A'}`} time="Reciente" />
             <ActivityItem text="Módulo de notificaciones en línea." time="Actualizado" />
-            <ActivityItem text="El sistema de cobro está operativo." time="En vivo" />
+            <ActivityItem text="El sistema de facturación está operativo." time="En vivo" />
           </div>
         </div>
       </div>
@@ -235,7 +253,6 @@ function VehiclesView({ vehicles, setVehicles, searchQuery, addNotification }) {
     const newId = `ORD-00${vehicles.length + 1}`;
     setVehicles([...vehicles, { id: newId, ...formData, status: 'planned' }]);
     
-    // Disparar Notificación
     addNotification(`Vehículo creado exitosamente: ${formData.plate} - ${formData.model}`, 'success');
 
     setShowModal(false);
@@ -314,8 +331,15 @@ function VehiclesView({ vehicles, setVehicles, searchQuery, addNotification }) {
   );
 }
 
-function OrdersView({ vehicles, setVehicles, searchQuery, addNotification }) {
+function OrdersView({ vehicles, setVehicles, inventory, handleStockMovement, searchQuery, addNotification }) {
   const [checkoutVehicle, setCheckoutVehicle] = useState(null);
+  
+  // Checkout Dynamic Form State
+  const [laborCost, setLaborCost] = useState(120);
+  const [scannerCost, setScannerCost] = useState(45);
+  const [selectedParts, setSelectedParts] = useState([]);
+  const [partToAdd, setPartToAdd] = useState('');
+  const [partQty, setPartQty] = useState(1);
 
   const filteredVehicles = vehicles.filter(v => v.id.toLowerCase().includes(searchQuery.toLowerCase()) || v.model.toLowerCase().includes(searchQuery.toLowerCase()));
 
@@ -328,17 +352,61 @@ function OrdersView({ vehicles, setVehicles, searchQuery, addNotification }) {
   };
 
   const handleCheckoutClick = (vehicle) => {
-    // Primero cambiamos a status Listo/Producción si no lo estaba
     if (vehicle.status !== 'production') {
       changeStatus(vehicle.id, 'production');
     }
-    // Abrimos ventana de cobro
+    // Reset Form
+    setLaborCost(120);
+    setScannerCost(45);
+    setSelectedParts([]);
+    setPartToAdd('');
+    setPartQty(1);
+    // Abrimos ventana
     setCheckoutVehicle({ ...vehicle, status: 'production' });
   };
 
+  const handleAddPart = () => {
+    if(!partToAdd) return;
+    const invItem = inventory.find(i => i.id === partToAdd);
+    if(!invItem) return;
+
+    if(invItem.stock < partQty) {
+       addNotification(`Stock insuficiente para ${invItem.name}. (Disponible: ${invItem.stock})`, 'warning');
+       return;
+    }
+
+    const existingPart = selectedParts.find(p => p.id === partToAdd);
+    if (existingPart) {
+      if (existingPart.qty + Number(partQty) > invItem.stock) {
+        addNotification(`Supera el stock actual de ${invItem.name}`, 'warning');
+        return;
+      }
+      setSelectedParts(selectedParts.map(p => p.id === partToAdd ? {...p, qty: p.qty + Number(partQty)} : p));
+    } else {
+      setSelectedParts([...selectedParts, { id: invItem.id, name: invItem.name, price: invItem.price, qty: Number(partQty) }]);
+    }
+    
+    setPartToAdd('');
+    setPartQty(1);
+  };
+
+  const handleRemovePart = (id) => {
+    setSelectedParts(selectedParts.filter(p => p.id !== id));
+  }
+
+  const partsTotal = selectedParts.reduce((sum, p) => sum + (p.price * p.qty), 0);
+  const subtotal = Number(laborCost) + Number(scannerCost) + partsTotal;
+  const iva = subtotal * 0.16;
+  const totalAmount = subtotal + iva;
+
   const confirmPayment = (id) => {
+    // Descontar inventario real
+    selectedParts.forEach(part => {
+      handleStockMovement(part.id, -part.qty, `Facturado en ${id}`, true);
+    });
+
     setVehicles(vehicles.map(v => v.id === id ? { ...v, status: 'dispatched' } : v));
-    addNotification(`¡Cobro realizado con éxito! Vehículo ${id} despachado.`, 'success');
+    addNotification(`¡Cobro realizado con éxito! Vehículo ${id} despachado. Total: $${totalAmount.toFixed(2)}`, 'success');
     setCheckoutVehicle(null);
   };
 
@@ -346,7 +414,7 @@ function OrdersView({ vehicles, setVehicles, searchQuery, addNotification }) {
     <div className="space-y-6">
       <header className="mb-6">
         <h1 className="text-3xl font-bold text-on-workspace mb-1 tracking-tight">Órdenes de Trabajo y Cobro</h1>
-        <p className="text-on-surface-muted text-sm">Gestiona el progreso, liquidación y despacho.</p>
+        <p className="text-on-surface-muted text-sm">Gestiona el progreso, liquidación interactiva y despacho.</p>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -387,64 +455,126 @@ function OrdersView({ vehicles, setVehicles, searchQuery, addNotification }) {
         {filteredVehicles.length === 0 && <p className="text-on-surface-muted">No se encontraron órdenes.</p>}
       </div>
 
-      {/* Checkout Modal */}
+      {/* Checkout Dynamic Modal */}
       {checkoutVehicle && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-surface-elevated rounded-lg shadow-dialog w-[500px] overflow-hidden">
-            <div className="bg-surface p-5 border-b border-outline flex justify-between items-center">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-surface-elevated rounded-lg shadow-dialog w-full max-w-2xl flex flex-col max-h-[90vh]">
+            
+            {/* Header */}
+            <div className="bg-surface p-5 border-b border-outline flex justify-between items-center shrink-0">
               <div>
                 <h2 className="text-xl font-bold text-on-surface flex items-center">
                   <Receipt className="mr-2 text-primary" size={24} />
-                  Liquidación y Despacho
+                  Facturación y Despacho
                 </h2>
-                <p className="text-xs text-on-surface-muted mt-1">{checkoutVehicle.id} - {checkoutVehicle.plate}</p>
+                <p className="text-xs text-on-surface-muted mt-1">Orden: {checkoutVehicle.id} | {checkoutVehicle.model} ({checkoutVehicle.plate})</p>
               </div>
               <button onClick={() => setCheckoutVehicle(null)}><X size={20} className="text-on-surface-muted hover:text-on-surface" /></button>
             </div>
             
-            <div className="p-6 bg-white">
-              <div className="mb-6">
-                <h3 className="font-bold text-sm text-on-surface mb-3 uppercase tracking-wide">Detalle de Servicios</h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between text-sm border-b border-gray-100 pb-2">
-                    <span className="text-gray-600">Mano de Obra (Mecánica General)</span>
-                    <span className="font-mono text-gray-800">$120.00</span>
-                  </div>
-                  <div className="flex justify-between text-sm border-b border-gray-100 pb-2">
-                    <span className="text-gray-600">Diagnóstico por Escáner</span>
-                    <span className="font-mono text-gray-800">$45.00</span>
-                  </div>
-                  <div className="flex justify-between text-sm border-b border-gray-100 pb-2">
-                    <span className="text-gray-600">Repuestos Utilizados (Aceite, Filtros)</span>
-                    <span className="font-mono text-gray-800">$85.00</span>
-                  </div>
+            {/* Scrollable Content */}
+            <div className="p-6 bg-white overflow-y-auto flex-1">
+              
+              {/* Cargos Fijos / Manuales */}
+              <div className="mb-6 grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-on-surface-muted mb-1">MANO DE OBRA ($)</label>
+                  <input type="number" min="0" className="w-full border border-outline rounded-sm p-2 text-sm font-mono" value={laborCost} onChange={e => setLaborCost(e.target.value)} />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-on-surface-muted mb-1">USO DE ESCÁNER/DIAGNÓSTICO ($)</label>
+                  <input type="number" min="0" className="w-full border border-outline rounded-sm p-2 text-sm font-mono" value={scannerCost} onChange={e => setScannerCost(e.target.value)} />
                 </div>
               </div>
 
-              <div className="bg-surface p-4 rounded-md space-y-2">
+              {/* Agregar Repuestos del Inventario */}
+              <div className="mb-6 border border-outline rounded-md p-4 bg-surface">
+                <h3 className="font-bold text-sm text-on-surface mb-3 uppercase tracking-wide">Inyectar Repuestos de Inventario</h3>
+                <div className="flex items-end space-x-2">
+                  <div className="flex-1">
+                    <label className="block text-xs text-on-surface-muted mb-1">Seleccionar Producto</label>
+                    <select className="w-full border border-outline rounded-sm p-2 text-sm bg-white" value={partToAdd} onChange={e => setPartToAdd(e.target.value)}>
+                      <option value="">-- Elige un repuesto --</option>
+                      {inventory.filter(i => i.stock > 0).map(i => (
+                        <option key={i.id} value={i.id}>{i.name} - ${i.price.toFixed(2)} (Stock: {i.stock})</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="w-24">
+                    <label className="block text-xs text-on-surface-muted mb-1">Cant.</label>
+                    <input type="number" min="1" className="w-full border border-outline rounded-sm p-2 text-sm bg-white text-center" value={partQty} onChange={e => setPartQty(e.target.value)} />
+                  </div>
+                  <button onClick={handleAddPart} className="bg-primary hover:bg-primary-strong text-white px-4 py-2 rounded-sm text-sm font-medium transition-colors">
+                    Añadir
+                  </button>
+                </div>
+              </div>
+
+              {/* Lista Desglosada */}
+              <div className="mb-6">
+                <h3 className="font-bold text-sm text-on-surface mb-3 uppercase tracking-wide">Detalle de Repuestos Aplicados</h3>
+                {selectedParts.length === 0 ? (
+                  <p className="text-sm text-on-surface-muted italic text-center p-4 border border-dashed border-outline rounded-sm">Sin repuestos adicionales.</p>
+                ) : (
+                  <div className="border border-outline rounded-sm overflow-hidden">
+                    <table className="w-full text-sm text-left">
+                      <thead className="bg-surface border-b border-outline text-xs text-on-surface-muted uppercase">
+                        <tr>
+                          <th className="px-3 py-2">Artículo</th>
+                          <th className="px-3 py-2 text-center">Cant.</th>
+                          <th className="px-3 py-2 text-right">Costo Unit.</th>
+                          <th className="px-3 py-2 text-right">Subtotal</th>
+                          <th className="px-3 py-2 text-center"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {selectedParts.map((p, idx) => (
+                          <tr key={idx} className="border-b border-outline/50 last:border-0">
+                            <td className="px-3 py-2">{p.name}</td>
+                            <td className="px-3 py-2 text-center">{p.qty}</td>
+                            <td className="px-3 py-2 text-right font-mono">${p.price.toFixed(2)}</td>
+                            <td className="px-3 py-2 text-right font-mono">${(p.price * p.qty).toFixed(2)}</td>
+                            <td className="px-3 py-2 text-center">
+                              <button onClick={() => handleRemovePart(p.id)} className="text-red-500 hover:text-red-700">
+                                <Trash2 size={16} />
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+
+              {/* Totales */}
+              <div className="bg-surface p-4 rounded-md space-y-2 border border-outline">
                 <div className="flex justify-between text-sm">
-                  <span className="text-on-surface-muted font-bold">Subtotal</span>
-                  <span className="font-mono">$250.00</span>
+                  <span className="text-on-surface-muted font-bold">Subtotal Servicios + Repuestos</span>
+                  <span className="font-mono">${subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-on-surface-muted font-bold">IVA (16%)</span>
-                  <span className="font-mono">$40.00</span>
+                  <span className="font-mono">${iva.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-lg border-t border-outline pt-2 mt-2">
+                <div className="flex justify-between text-lg border-t border-outline pt-3 mt-3">
                   <span className="font-bold text-on-surface">TOTAL A COBRAR</span>
-                  <span className="font-mono font-bold text-primary-strong">$290.00</span>
+                  <span className="font-mono font-bold text-primary-strong">${totalAmount.toFixed(2)}</span>
                 </div>
               </div>
+
             </div>
 
-            <div className="bg-surface p-4 border-t border-outline flex justify-end space-x-3">
+            {/* Footer */}
+            <div className="bg-surface p-4 border-t border-outline flex justify-end space-x-3 shrink-0">
               <button onClick={() => setCheckoutVehicle(null)} className="px-4 py-2 border border-outline rounded-sm text-sm font-medium hover:bg-gray-50 text-gray-600">
                 Cancelar
               </button>
               <button onClick={() => confirmPayment(checkoutVehicle.id)} className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-sm text-sm font-medium shadow-subtle flex items-center">
-                <CheckCircle size={16} className="mr-2" /> Confirmar Pago y Despachar
+                <CheckCircle size={16} className="mr-2" /> Procesar Pago y Despachar
               </button>
             </div>
+
           </div>
         </div>
       )}
@@ -452,7 +582,7 @@ function OrdersView({ vehicles, setVehicles, searchQuery, addNotification }) {
   );
 }
 
-function InventoryView({ inventory, setInventory, searchQuery, addNotification }) {
+function InventoryView({ inventory, setInventory, handleStockMovement, searchQuery, addNotification }) {
   const [showModal, setShowModal] = useState(false);
   const [newItem, setNewItem] = useState({ name: '', stock: 0, minStock: 10, price: 0 });
 
@@ -466,24 +596,6 @@ function InventoryView({ inventory, setInventory, searchQuery, addNotification }
     addNotification(`Producto creado: ${newItem.name} (Stock: ${newItem.stock})`, 'info');
     setShowModal(false);
     setNewItem({ name: '', stock: 0, minStock: 10, price: 0 });
-  };
-
-  const updateStock = (id, delta, actionName) => {
-    setInventory(inventory.map(i => {
-      if (i.id === id) {
-        const newStock = Math.max(0, i.stock + delta);
-        
-        // Notify if it goes below minStock and wasn't before, or just general notification
-        if (newStock <= i.minStock && i.stock > i.minStock) {
-          addNotification(`¡Alerta! Producto bajo en stock: ${i.name} (Quedan ${newStock})`, 'warning');
-        } else {
-          addNotification(`Movimiento de inventario (${actionName}): ${i.name}. Nuevo stock: ${newStock}`, 'info');
-        }
-        
-        return { ...i, stock: newStock };
-      }
-      return i;
-    }));
   };
 
   return (
@@ -525,14 +637,14 @@ function InventoryView({ inventory, setInventory, searchQuery, addNotification }
                 <td className="py-3 px-4 text-center">
                   <div className="flex items-center justify-center space-x-2">
                     <button 
-                      onClick={() => updateStock(item.id, 1, 'Compra')} 
+                      onClick={() => handleStockMovement(item.id, 1, 'Compra')} 
                       className="bg-green-50 hover:bg-green-100 text-green-700 border border-green-200 px-2 py-1 rounded-sm text-xs font-bold flex items-center shadow-sm"
                       title="Registrar Compra / Ingreso"
                     >
                       <ArrowUpRight size={14} className="mr-1" /> Compra
                     </button>
                     <button 
-                      onClick={() => updateStock(item.id, -1, 'Merma/Salida')} 
+                      onClick={() => handleStockMovement(item.id, -1, 'Merma/Salida')} 
                       className="bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 px-2 py-1 rounded-sm text-xs font-bold flex items-center shadow-sm"
                       title="Registrar Merma / Salida"
                     >
